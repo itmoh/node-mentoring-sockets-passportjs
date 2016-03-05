@@ -26,12 +26,15 @@ var all = {
 
     // Secret for session, you will want to change this and make it an environment variable
     secrets: {
-        session: 'test-secret'
+        session: 'my-secret'
     },
 
     // List of user roles
     userRoles: ['guest', 'user', 'admin'],
 
+    locals: {
+        AppName: 'Mentoring App'
+    },
     // MongoDB connection options
     mongo: {
         options: {
