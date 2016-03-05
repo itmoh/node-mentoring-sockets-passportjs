@@ -21,7 +21,7 @@ app.get('/login', function (req, res) {
     res.render('login', {});
 })
     app.get('/poker', auth.isAuthenticated(), function (req, res) {
-        res.render('poker', {});
+        res.render('poker', {userId: req.user._id.toString()});
     })
 app.get('/*', function (req, res) {
     res.render('index', {});
