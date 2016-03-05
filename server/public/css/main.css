@@ -1,0 +1,25 @@
+#users .name, #users .mark{
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 40px;
+    padding: 2px 5px 2px 5px;
+
+}
+#users .mark {
+    color: red;
+}
+
+ul#marks {
+    list-style-type: none;
+}
+
+ul#marks li {
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 40px;
+    cursor: pointer;
+    padding: 2px 1px 2px 5px;
+}
+ul#marks li:hover {
+    background-color: gray;
+}

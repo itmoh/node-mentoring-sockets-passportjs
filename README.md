@@ -1,3 +1,9 @@
+https://goo.gl/ZN6ZKz
+
+
+
+
+
 # node-mentoring-sockets-passportjs
 examples and presentation for mentoring program. Contains information about pasportjs and socket.io
 
