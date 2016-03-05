@@ -11,13 +11,12 @@ exports.setup = function (User, config) {
                     name: {$regex: new RegExp("^" + name + "$", "i")}
                 })
                 .then(function (user) {
-                    return user /*|| new User({
-                     name: name,
-                     password: password
-                     }).save()*/;
-                })
-                .then(function (user) {
-                    done(null, user)
+                    if (user && user.authenticate(password)) {
+                        done(null, user);
+                    }
+                    else {
+                        done(null, false);
+                    }
                 })
                 .catch(function (err) {
                     return done(err);
