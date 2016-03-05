@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= AppName %></title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <script type="text/javascript">
+        var socket = io.connect();
+
+        socket.on('chat', function (data) {
+            var msg = data.nick + ': ' + data.message;
+            $('textarea').val($('textarea').val() + msg + '\n');
+        });
+
+        // Handle UI
+        $(function () {
+            // Set nickname
+            $('#nick').on('click', function () {
+                socket.emit('nick', $('#nickText').val());
+            });
+
+            // Send chat message
+            $('#chat').on('click', function () {
+                socket.emit('chat', {
+                    message: $('#chatText').val()
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container" style="margin-top:10px;">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" href="/"><%= AppName %></a>
+            <ul class="nav">
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span6">
+            test
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
