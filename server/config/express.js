@@ -15,6 +15,8 @@ var config = require('./environment')
 module.exports = function (app) {
     var env = app.get('env');
 
+    Object.assign(app.locals, config.locals);
+    app.set('view engine', 'ejs');
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
     app.use(cookieParser());

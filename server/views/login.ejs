@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= AppName %></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="container" style="margin-top:10px;">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" href="/"><%= AppName %></a>
+            <ul class="nav">
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span6">
+            <label>Use existing</label>
+            <form action="/auth/local" method="POST">
+                <label>Login</label>
+                <input type="text" name="name" placeholder="Type a login..."/>
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Type a password..."/>
+                <p>
+                    <button type="submit" class="btn">login</button>
+                </p>
+            </form>
+        </div>
+        <div class="span5">
+            <label>Create new</label>
+            <form action="/api/user" method="POST">
+                <label>Login</label>
+                <input type="text" name="name" placeholder="Type a login..."/>
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Type a password..."/>
+                <p>
+                    <button type="submit" class="btn">create</button>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

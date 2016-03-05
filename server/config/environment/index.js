@@ -20,7 +20,10 @@ var all = {
     secrets: {
         session: 'test-secret'
     },
-
+    
+    locals: {
+        AppName: 'Mentoring App'
+    },
     // MongoDB connection options
     mongo: {
         options: {
