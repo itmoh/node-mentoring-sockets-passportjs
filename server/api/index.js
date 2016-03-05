@@ -6,6 +6,6 @@ var auth = require('../auth/auth.service');
 const router = express.Router();
 
 // Insert routes below
-router.use('/user', auth.isAuthenticated(),  require('./user'));
+router.use('/user',/* auth.isAuthenticated(),  */require('./user'));
 
 module.exports = router;

@@ -19,7 +19,7 @@ module.exports = function (app) {
     });
 
     app.get('/poker', auth.isAuthenticated(), function (req, res) {
-        res.render('poker', {});
+        res.render('poker', {userId: req.user._id.toString()});
     })
 
     app.get('/*', function (req, res) {
