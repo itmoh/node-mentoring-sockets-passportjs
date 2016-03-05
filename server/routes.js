@@ -20,6 +20,9 @@ app.use('/auth', require('./auth'));
 app.get('/login', function (req, res) {
     res.render('login', {});
 })
+    app.get('/poker', auth.isAuthenticated(), function (req, res) {
+        res.render('poker', {});
+    })
 app.get('/*', function (req, res) {
     res.render('index', {});
 });

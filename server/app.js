@@ -14,6 +14,8 @@ db(formatMongooseDbUriFromEnv(config.mongo));
 var app = express();
 app.use(express.static(__dirname + '/public'));
 require('./config/express')(app);
+require('./config/socket')(server);
+
 require('./routes')(app);
 
 // Start server
