@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 var passport = require('passport');
-
+var session = require('express-session');
 module.exports = function (app) {
     var env = app.get('env');
 
@@ -18,6 +18,9 @@ module.exports = function (app) {
   app.use(bodyParser.json());
   app.use(cookieParser());
     app.use(express.static('public'));
+    app.use(session({
+        secret: 'keyboard cat'
+    }))
     app.use(passport.initialize());
     app.use(passport.session());
 
