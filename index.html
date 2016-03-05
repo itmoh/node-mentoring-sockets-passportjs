@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Node.js mentoring</title>
+
+    <meta name="description" content="Node.js mentoring presentation">
+    <meta name="author" content="Maksym Tarasenko">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/white.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <style>
+        .reveal section p.main-logo img {
+            border: none;
+            background: none;
+            box-shadow: none;
+        }
+
+        .reveal section p.main-logo {
+            top: -200px;
+            position: fixed;
+        }
+
+        h1.node-heared,
+        h2.node-heared {
+            color: white;
+            text-shadow: -1px -1px white, 2px 1px #000;
+        }
+
+        small.highlight-blue {
+            background-color: #39C2D7;
+            color: white;
+            padding: 8px;
+        }
+    </style>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+        <section data-background="img/lake_view.jpg" style="text-align: left; color: white;">
+            <p class='main-logo'><img src="img\EPAM_LOGO_White_type_RGB.png"/></p>
+            <h1 class="node-heared">JS on Backend</h1>
+            <h2 class="node-heared">PassportJS &amp; SOCKET.IO</h2>
+            <p>
+                <small class="highlight-blue">Created by <a href="https://github.com/maxim-tarasenko">Maksym
+                    Tarasenko</a></small>
+            </p>
+        </section>
+
+        <section>
+            <h1>Agenda</h1>
+            <ul>
+                <li>PASSPORTJS</li>
+                <li>SOCKET.IO</li>
+            </ul>
+        </section>
+
+        <!-- Example of nested vertical slides -->
+        <section>
+            <section>
+                <h2><a href="http://passportjs.org/">PASSPORTJS</a></h2>
+                <ul fragment>
+                    <li>Lighweight</li>
+                    <li>Basic Auth</li>
+                    <li>OAuth</li>
+                    <li>OAuth2</li>
+                </ul>
+            </section>
+            <section data-markdown>
+                <h2>LOCAL</h2>
+                <code class="hljs" data-trim>
+                    var passport = require('passport')
+                    , LocalStrategy = require('passport-local').Strategy;
+
+                    passport.use(new LocalStrategy(
+                    function (username, password, done) {
+                    User.findOne({username: username}, function (err, user) {
+                    if (err) {
+                    return done(err);
+                    }
+                    if (!user) {
+                    return done(null, false, {message: 'Incorrect username.'});
+                    }
+                    if (!user.validPassword(password)) {
+                    return done(null, false, {message: 'Incorrect password.'});
+                    }
+                    return done(null, user);
+                    });
+                    }
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>LOCAL</h2>
+                <code class="hljs" data-trim>
+                    app.use(passport.initialize());
+                    passport.serializeUser(function (user, done) {
+                    done(null, user.username);
+                    });
+                    passport.deserializeUser(function (username, done) {
+                    User.findOne({username: username},
+                    function (err, user) {return done(err, user);});
+                    })
+                    app.post('/login', passport.authenticate('local', {
+                    successRedirect: '/',
+                    failureRedirect: '/login'
+                    }));
+                </code>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <h2>OPEN ID</h2>
+                <code class="hljs" data-trim>
+                    var passport = require('passport')
+                    , OpenIDStrategy = require('passport-openid').Strategy;
+
+                    passport.use(new OpenIDStrategy({
+                    returnURL: 'http://www.example.com/auth/openid/return',
+                    realm: 'http://www.example.com/'
+                    },
+                    function(identifier, done) {
+                    User.findOrCreate({ openId: identifier }, function(err, user) {
+                    done(err, user);
+                    });
+                    }
+                    ));
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>OPEN ID</h2>
+                <code class="hljs" data-trim>
+                    // Accept the OpenID identifier and redirect the user to their OpenID
+                    // provider for authentication. When complete, the provider will redirect
+                    // the user back to the application at:
+                    // /auth/openid/return
+                    app.post('/auth/openid', passport.authenticate('openid'));
+
+                    // The OpenID provider has redirected the user back to the application.
+                    // Finish the authentication process by verifying the assertion. If valid,
+                    // the user will be logged in. Otherwise, authentication has failed.
+                    app.get('/auth/openid/return',
+                    passport.authenticate('openid', { successRedirect: '/',
+                    failureRedirect: '/login' }));
+                </code>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <h2>OAUTH 1.0</h2>
+                <code class="hljs" data-trim>
+                    var passport = require('passport')
+                    , OAuthStrategy = require('passport-oauth').OAuthStrategy;
+
+                    passport.use('provider', new OAuthStrategy({
+                    requestTokenURL: 'https://www.provider.com/oauth/request_token',
+                    accessTokenURL: 'https://www.provider.com/oauth/access_token',
+                    userAuthorizationURL: 'https://www.provider.com/oauth/authorize',
+                    consumerKey: '123-456-789',
+                    consumerSecret: 'shhh-its-a-secret'
+                    callbackURL: 'https://www.example.com/auth/provider/callback'
+                    },
+                    function(token, tokenSecret, profile, done) {
+                    User.findOrCreate(..., function(err, user) {
+                    done(err, user);
+                    });
+                    }
+                    ));
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>OAUTH 2.0</h2>
+                <code class="hljs" data-trim>
+                    var passport = require('passport')
+                    , OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+
+                    passport.use('provider', new OAuth2Strategy({
+                    authorizationURL: 'https://www.provider.com/oauth2/authorize',
+                    tokenURL: 'https://www.provider.com/oauth2/token',
+                    clientID: '123-456-789',
+                    clientSecret: 'shhh-its-a-secret'
+                    callbackURL: 'https://www.example.com/auth/provider/callback'
+                    },
+                    function(accessToken, refreshToken, profile, done) {
+                    User.findOrCreate(..., function(err, user) {
+                    done(err, user);
+                    });
+                    }
+                    ));
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>OAUTH 2.0</h2>
+                <code class="hljs" data-trim>
+                    // only one scope
+                    app.get('/auth/provider',
+                    passport.authenticate('provider', { scope: 'email' })
+                    );
+                    // multiple scopes
+                    app.get('/auth/provider',
+                    passport.authenticate('provider', { scope: ['email', 'sms'] })
+                    );
+                </code>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>REALTIME</h2>
+                <ul>
+                    <li>Periodic Polling</li>
+                    <li>Long Polling</li>
+                    <li>Forever Frame</li>
+                    <li>WebSockets</li>
+                </ul>
+            </section>
+            <section data-markdown>
+                <h2>SOCKET.IO</h2>
+                <code class="hljs" data-trim>
+                    var io = require('socket.io')(8080);
+
+                    io.on('connection', function (socket) {
+                        socket.emit('greet', {
+                            hello: 'world'
+                        });
+
+                        socket.on('message', function (from, msg) {
+                            console.log('message by ', from, ' saying ', msg);
+                        });
+
+                        socket.on('disconnect', function () {
+                            socket.emit('user disconnected');
+                        });
+                    });
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>SOCKET.IO</h2>
+                <code class="hljs" data-trim>
+                    &lt;script src "/socket.io/socket.io.js"&gt;&lt;/script&gt;
+                    &lt;script&gt;
+                        var socket = io('http://localhost:8080');
+                        socket.on('greet', function (data) {
+                            console.log(data);
+                            socket.emit('message', 'user', 'hello');
+                        });
+                    &lt;/script&gt;
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>NAMESPACES</h2>
+                <code class="hljs" data-trim>
+                    var io = require('socket.io')(8080);
+                    var chat = io
+                    .of('/chat')
+                    .on('connection', function (socket) {
+                    socket.emit('a message', {
+                    that: 'only'
+                    , '/chat': 'will get'
+                    });
+                    chat.emit('a message', {
+                    everyone: 'in'
+                    , '/chat': 'will get'
+                    });
+                    });
+
+                    var news = io
+                    .of('/news')
+                    .on('connection', function (socket) {
+                    socket.emit('item', { news: 'item' });
+                    });
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>NAMESPACES</h2>
+                <code class="hljs" data-trim>
+                    var chat = io.connect('http://localhost/chat')
+                            , news = io.connect('http://localhost/news');
+
+                    chat.on('connect', function () {
+                        chat.emit('hi!');
+                    });
+
+                    news.on('news', function () {
+                        news.emit('woot');
+                    });
+                </code>
+            </section>
+            <section data-markdown>
+                <h2>CALLBACKS</h2>
+                <code class="hljs" data-trim>
+                    var io = require('socket.io')(8080);
+
+                    io.on('connection', function (socket) {
+                        socket.on('call me', function (name, fn) {
+                            fn('holla');
+                        });
+                    });
+                    &lt;script&gt;
+                        var socket = io();
+                        socket.on('connect', function () {
+                            socket.emit('call me', 'andrew', function (data) {// data will be 'holla'
+                            });
+                        });
+                    &lt;/script&gt;
+
+                </code>
+            </section>
+
+            <section data-markdown>
+                <h2>BROADCAST & VOLATILE</h2>
+                <code class="hljs" data-trim>
+                    var io = require('socket.io')(8080);
+
+                    io.on('connection', function (socket) {
+                        socket.broadcast.emit('new user connected');
+                    });
+                    var io = require('socket.io')(8080);
+
+                    io.on('connection', function (socket) {
+                        var tweets = setInterval(function () {
+                            getCatsTweets(function (tweet) {
+                            socket.volatile.emit('cats tweet', tweet);
+                            });
+                        }, 100);
+
+                        socket.on('disconnect', function () {
+                            clearInterval(tweets);
+                        });
+                    });
+                </code>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Questions?</h2>
+            </section>
+        </section>
+    </div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [{
+            src: 'lib/js/classList.js',
+            condition: function () {
+                return !document.body.classList;
+            }
+        }, {
+            src: 'plugin/markdown/marked.js',
+            condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+        }, {
+            src: 'plugin/markdown/markdown.js',
+            condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+        }, {
+            src: 'plugin/highlight/highlight.js',
+            async: true,
+            callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+        }, {
+            src: 'plugin/zoom-js/zoom.js',
+            async: true
+        }, {
+            src: 'plugin/notes/notes.js',
+            async: true
+        }]
+    });
+</script>
+
+</body>
+
+</html>
