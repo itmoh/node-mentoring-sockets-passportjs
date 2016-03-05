@@ -10,8 +10,8 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 
-module.exports = function(app) {
-  var env = app.get('env');
+module.exports = function (app) {
+    var env = app.get('env');
 
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
