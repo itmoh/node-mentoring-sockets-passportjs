@@ -20,6 +20,8 @@ mongoose.connection.on('error', function (err) {
 var app = express();
 var server = require('http').createServer(app);
 require('./config/express')(app);
+require('./config/socket')(server);
+
 require('./routes')(app);
 
 // Start server

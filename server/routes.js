@@ -5,6 +5,7 @@
 'use strict';
 
 var path = require('path');
+var auth = require('./auth/auth.service');
 
 module.exports = function (app) {
 
@@ -15,7 +16,12 @@ module.exports = function (app) {
 
     app.get('/login', function (req, res) {
         res.render('login', {});
+    });
+
+    app.get('/poker', auth.isAuthenticated(), function (req, res) {
+        res.render('poker', {});
     })
+
     app.get('/*', function (req, res) {
         res.render('index', {});
     });
