@@ -12,6 +12,7 @@ db(formatMongooseDbUriFromEnv(config.mongo));
 
 // Setup server
 var app = express();
+app.use(express.static(__dirname + '/public'));
 require('./config/express')(app);
 require('./routes')(app);
 
