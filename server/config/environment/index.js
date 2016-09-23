@@ -1,14 +1,9 @@
 'use strict';
 
-var path = require('path');
-var _ = require('lodash');
-
-function requiredProcessEnv(name) {
-    if (!process.env[name]) {
-        throw new Error('You must set the ' + name + ' environment variable');
-    }
-    return process.env[name];
-}
+var path = require('path'),
+    dotenv = require('dotenv'),
+    envPath = path.join(__dirname, '/../../../.env');
+dotenv.config({ path: envPath });
 
 // All configurations will extend these options
 // ============================================
@@ -21,16 +16,10 @@ var all = {
     // Server port
     port: process.env.PORT || 9000,
 
-    // Server IP
-    ip: process.env.IP || '0.0.0.0',
-
     // Secret for session, you will want to change this and make it an environment variable
     secrets: {
         session: 'test-secret'
     },
-
-    // List of user roles
-    userRoles: ['guest', 'user', 'admin'],
 
     // MongoDB connection options
     mongo: {
@@ -45,6 +34,6 @@ var all = {
 
 // Export the config object based on the NODE_ENV
 // ==============================================
-module.exports = _.merge(
+module.exports = Object.assign(
     all,
     require('./' + process.env.NODE_ENV + '.js') || {});

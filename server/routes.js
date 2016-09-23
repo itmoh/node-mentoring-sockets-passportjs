@@ -4,11 +4,10 @@
 
 'use strict';
 
-var path = require('path');
-
+var api = require('./api');
 module.exports = function(app) {
 
   // Insert routes below
-  app.use('/api/user', require('./api/user'));
+  app.use('/api', api);
 
 };

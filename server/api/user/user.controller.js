@@ -3,30 +3,8 @@ var OK = 200;
 var CREATED = 201;
 var NOT_FOUND = 404;
 
-
-var path = require('path');
 var User = require('./user.model');
 var q = require('q');
-
-exports.getCurrentUser = function getCurrentUser(req, res) {
-    return q.Promise(
-        function (resolve, reject) {
-            if (!req.user || !req.user._id) {
-                reject();
-            } else {
-                resolve(req.user._id);
-            }
-        })
-        .then(function (userId) {
-            return User.findById(userId);
-        })
-        .then(function (result) {
-            res.status(OK).json(result);
-        })
-        .catch(function (err) {
-            res.status(NOT_FOUND).json(err);
-        });
-}
 
 exports.get = function get(req, res) {
     return User.find(req.params)
@@ -96,3 +74,20 @@ exports.remove = function remove(req, res) {
         });
 }
 
+exports.getCurrentUser = function getCurrentUser(req, res) {
+    return q.Promise(
+        function (resolve, reject) {
+            if (!req.user || !req.user._id) {
+                reject();
+            } else {
+                resolve(req.user._id);
+            }
+        })
+        .then(User.findById)
+        .then(function (result) {
+            res.status(OK).json(result);
+        })
+        .catch(function (err) {
+            res.status(NOT_FOUND).json(err);
+        });
+}

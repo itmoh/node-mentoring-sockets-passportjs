@@ -9,7 +9,6 @@ var UserSchema = new Schema({
     type: String,
     required: true
   },
-  githubId: String,
   salt: String,
   hashedPassword: String
 }, {collection: 'users'});
