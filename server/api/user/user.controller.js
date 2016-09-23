@@ -7,73 +7,73 @@ var User = require('./user.model');
 var q = require('q');
 
 exports.get = function get(req, res) {
-    return User.find(req.params)
-        .then(function (result) {
-            res.status(OK).json({
-                status: 'success',
-                total: result.length,
-                responses: result
-            });
-        })
+    // todo: find users
+    .then(function (result) {
+        res.status(OK).json({
+            status: 'success',
+            total: result.length,
+            responses: result
+        });
+    })
         .catch(function (err) {
             res.status(NOT_FOUND).json(err);
         });
 }
 
 exports.add = function add(req, res) {
-    var modelInstance = new User(req.body);
-    return modelInstance.save()
-        .then(function (result) {
-            res.status(CREATED).json({
-                status: 'success',
-                response: result
-            });
-        })
+    // todo: create and save user
+    .then(function (result) {
+        res.status(CREATED).json({
+            status: 'success',
+            response: result
+        });
+    })
         .catch(function (err) {
             res.send(err);
         });
 }
 
 exports.getById = function getById(req, res) {
-    return User.findById(req.params.id)
-        .then(function (result) {
-            res.status(OK).json(result);
-        })
+    // todo: find sigle user by id
+    .then(function (result) {
+        res.status(OK).json(result);
+    })
         .catch(function (err) {
             res.status(NOT_FOUND).json(err);
         });
 }
 
 exports.update = function update(req, res) {
-    return User.findById(req.params.id)
-        .then(function (modelInstance) {
-            var updatedInstance = _lodash.extend(modelInstance, req.body);
-            return updatedInstance.save();
-        })
-        .then(function (result) {
-            res.status(OK).json({
-                status: 'success',
-                response: result
-            });
-        })
+    // User.findById(req.params.id)
+    // .then(function (modelInstance) {
+    //     var updatedInstance = Object.assign(modelInstance, req.body);
+    //     return updatedInstance.save();
+    // })
+    //User.update({ _id: id }, { $set: { size: 'large' }})
+    //User.findByIdAndUpdate(id, { $set: { size: 'large' }})
+    .then(function (result) {
+        res.status(OK).json({
+            status: 'success',
+            response: result
+        });
+    })
         .catch(function (err) {
             res.status(NOT_FOUND).json(err);
         });
 }
 
 exports.remove = function remove(req, res) {
-    return User.remove({_id: req.params.id})
-        .then(function (result) {
-            res.json({
-                status: 'success',
-                response: result
-            });
-        })
+    // todo: remove
+    .then(function (result) {
+        res.json({
+            status: 'success',
+            response: result
+        });
+    })
         .catch(function (err) {
             res.send(err);
         });
 }
-
 exports.getCurrentUser = function getCurrentUser(req, res) {
     return q.Promise(
         function (resolve, reject) {

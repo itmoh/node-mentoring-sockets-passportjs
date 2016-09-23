@@ -14,14 +14,5 @@ const router = express.Router();
  * delete user
  */
 
-router.route('')
-    .get(controller.get)
-    .post(controller.add);
-
-router.route('/:id')
-    .get(controller.getById)
-    .put(controller.update)
-    .delete(controller.remove);
-
 module.exports = router;
 

@@ -13,16 +13,16 @@ var UserSchema = new Schema({
   hashedPassword: String
 }, {collection: 'users'});
 
-UserSchema
-  .virtual('password')
-  .set(function(password) {
-    this._password = password;
-    this.salt = this.makeSalt();
-    this.hashedPassword = this.encryptPassword(password);
-  })
-  .get(function() {
-    return this._password;
-  });
+function setPassword(password) {
+  this._password = password;
+  this.salt = this.makeSalt();
+  this.hashedPassword = this.encryptPassword(password);
+}
+
+function getPassword() {
+  return this._password;
+}
+//create virtual password property
 
 UserSchema.methods = {
 
