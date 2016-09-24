@@ -5,11 +5,5 @@ const express = require('express'),
     router = express.Router();
 
 router.use('/user', require('./user'));
-router.post('/login', passport.authenticate('local',
-    {
-        successRedirect: '/',
-        failureRedirect: '/login.html'
-    }
-));
 
 module.exports = router;

@@ -19,8 +19,12 @@ passport.deserializeUser(function(id, done) {
 
 var router = express.Router();
 
-router.use('/local', require('./local'));
-
+router.use('/login', passport.authenticate('local',
+    {
+        successRedirect: '/poker',
+        failureRedirect: '/login'
+    }
+));
 router.use('/logout', function (req, res) {
     req.logout();
     res.cookie('token', null);

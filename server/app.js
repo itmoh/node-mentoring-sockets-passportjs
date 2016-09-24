@@ -8,18 +8,19 @@ var express = require('express'),
     config = require('./config/environment');
 
 // Connect to database
-db(formatMongooseDbUriFromEnv(config.mongo));
 
 // Setup server
 var app = express();
 app.use(express.static(__dirname + '/public'));
+require('./config/mongoose')(formatMongooseDbUriFromEnv(config.mongo));
 require('./config/express')(app);
-require('./config/socket')(server);
 
 require('./routes')(app);
+var server = require('http').Server(app);
+require('./config/socket')(server);
 
 // Start server
-app.listen(config.port, function () {
+server.listen(config.port, function () {
     console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
 });
 
